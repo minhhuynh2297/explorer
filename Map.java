@@ -94,7 +94,7 @@ public class Map {
 
     }
 
-    public void dijkstra(int src, int dest){
+    public void explore(int src, int dest){
         costE[src] = 0;
         costT[src] = 0;
         pq = new PriorityQueue<Terrain>(map.length*map.length, new Terrain());
