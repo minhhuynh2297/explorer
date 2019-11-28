@@ -104,11 +104,30 @@ public class Map {
             settled.add(u);
             neighbors(u);
         }
+        System.out.println("The shortest energy cost from source to dest is:" + costE[dest]);
+        System.out.println("The shortest time cost from source to dest is:" + costT[dest]);
 
-            System.out.println("The shortest energy cost from source to dest is:" + costE[dest]);
-            System.out.println("The shortest time cost from source to dest is:" + costT[dest]);
+    }
+    public void explore(int src){
+        costE[src] = 0;
+        costT[src] = 0;
+        pq = new PriorityQueue<Terrain>(map.length*map.length, new Terrain());
+        pq.add(new Terrain(src, 0, 0));
+        while(settled.size() != map.length*map.length){
+            int u = pq.remove().id;
+            settled.add(u);
+            neighbors(u);
         }
+        System.out.println("The smallest energy cost from :");
+        for (int i = 0; i < costE.length; i++)
+            System.out.println(src + " to " + i + " is "
+                    + costE[i]);
+        System.out.println("The smallest time cost from :");
+        for (int i = 0; i < costT.length; i++)
+            System.out.println(src + " to " + i + " is "
+                    + costT[i]);
 
+    }
     public void neighbors(int u){
         int edgeT = -1;
         int newT = -1;
