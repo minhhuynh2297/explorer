@@ -4,7 +4,7 @@ public class Explorer {
         Map map = new Map(4, 1, 5 , 1, 9);
         map.printMap();
         //map.printList();
-        map.dijkstra(1,2);
+        map.explore(1,2);
     }
 
 }
