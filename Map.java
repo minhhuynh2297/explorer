@@ -94,68 +94,6 @@ public class Map {
 
     }
 
-    public void explore(int src, int dest){
-        costE[src] = 0;
-        costT[src] = 0;
-        pq = new PriorityQueue<Terrain>(map.length*map.length, new Terrain());
-        pq.add(new Terrain(src, 0, 0));
-        while(settled.size() != map.length*map.length){
-            int u = pq.remove().id;
-            settled.add(u);
-            neighbors(u);
-        }
-        System.out.println("The shortest energy cost from source to dest is:" + costE[dest]);
-        System.out.println("The shortest time cost from source to dest is:" + costT[dest]);
-
-    }
-    public void explore(int src){
-        costE[src] = 0;
-        costT[src] = 0;
-        pq = new PriorityQueue<Terrain>(map.length*map.length, new Terrain());
-        pq.add(new Terrain(src, 0, 0));
-        while(settled.size() != map.length*map.length){
-            int u = pq.remove().id;
-            settled.add(u);
-            neighbors(u);
-        }
-        System.out.println("The smallest energy cost from :");
-        for (int i = 0; i < costE.length; i++)
-            System.out.println(src + " to " + i + " is "
-                    + costE[i]);
-        System.out.println("The smallest time cost from :");
-        for (int i = 0; i < costT.length; i++)
-            System.out.println(src + " to " + i + " is "
-                    + costT[i]);
-
-    }
-    public void neighbors(int u){
-        int edgeT = -1;
-        int newT = -1;
-        int edgeE = -1;
-        int newE = -1;
-
-        for(int i =0; i< adj.get(u).size(); i++){
-            Terrain v = adj.get(u).get(i);
-
-            if(!settled.contains(v.id)){
-                edgeT = v.time;
-                newT= costT[u] + edgeT;
-                edgeE = v.energy;
-                newE = costT[u] + edgeE;
-
-                if(newT < costT[v.id]){
-                    costT[v.id] = newT;
-                }
-                if(newE < costE[v.id]){
-                    costE[v.id] = newE;
-                }
-
-                pq.add(new Terrain(v.id, costT[v.id], costE[v.id]));
-            }
-
-        }
-    }
-
     public int energyExplore(int src, int dest){
         return 0;
     }
@@ -183,9 +121,42 @@ public class Map {
             System.out.println();
             for (int j=0; j<map.length; j++){
                 System.out.println(i + ", " + j);
-                System.out.println("[ID:" + map[j][i].id + " E:" + map[j][i].energy + " T:" + map[j][i].time + "]");
+                System.out.println("[ID:" + map[i][j].id + " E:" + map[i][j].energy + " T:" + map[i][j].time + "]");
             }
         }
+    }
+    public void printMapTime(){
+        for(int i=0; i<map.length; i++){
+            System.out.println();
+            for (int j=0; j<map.length; j++){
+                System.out.print(map[i][j].time + " ");
+            }
+        }
+    }
+    public Terrain TheCell(int i, int j){
+        return map[i][j];
+    }
+    public Terrain GetTheqQuadrantInfo(int the_unit){
+        int unit_length = map.length/2;
+        int id_x = the_unit/2;
+        int id_y= the_unit%2;
+        int i_start = id_x*unit_length;
+        int i_end = i_start+unit_length;
+        int j_start = id_y*unit_length;
+        int j_end = j_start+unit_length;
+        float sum_time_cost = 0;
+        float sum_energy_cost = 0;
+        for (int i = i_start; i < i_end; i++) {
+            for (int j = j_start; j < j_end; j++) {
+                sum_time_cost = sum_time_cost + map[i][j].time;
+                sum_energy_cost = sum_energy_cost + map[i][j].energy;
+            }
+        }
+        return new Terrain((int) Math.random(), sum_time_cost/(unit_length*unit_length), sum_energy_cost/(unit_length*unit_length));
+    }
+
+    public int Length(){
+        return map.length;
     }
 
 }
