@@ -3,13 +3,13 @@ import java.util.Comparator;
 public class Terrain implements Comparator<Terrain> {
 
     public int id;
-    public float time, energy;
+    public int time, energy;
 
     public Terrain(){
 
     }
 
-    public Terrain(int id, float time, float energy){
+    public Terrain(int id, int energy, int time){
         this.id = id;
         this.time = time;
         this.energy = energy;

@@ -22,10 +22,10 @@ public class Map {
         for (int i = 0; i < (x / 2); i++) {
             for (int j = 0; j < (x / 2); j++) {
                 if(i==0){
-                    map[j][i] = new Terrain(j,(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
+                    map[i][j] = new Terrain(j,(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
                 }
                 else{
-                    map[j][i] = new Terrain(j+(map.length * i),(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
+                    map[i][j] = new Terrain(j+(map.length * i),(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
                 }
             }
         }
@@ -34,10 +34,10 @@ public class Map {
         for (int i = 0; i < (x / 2); i++) {
             for (int j = (x / 2); j < x; j++) {
                 if(i==0){
-                    map[j][i] = new Terrain(j,(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
+                    map[i][j] = new Terrain(j,(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
                 }
                 else{
-                    map[j][i] = new Terrain(j+(map.length * i),(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
+                    map[i][j] = new Terrain(j+(map.length * i),(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
                 }
             }
         }
@@ -45,7 +45,7 @@ public class Map {
         /* third quadrant */
         for (int i = (x / 2); i < x; i++) {
             for (int j = 0; j < (x / 2); j++) {
-                map[j][i] = new Terrain(j+(map.length * i),(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
+                map[i][j] = new Terrain(j+(map.length * i),(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
                 //       System.out.println("2");
             }
         }
@@ -53,7 +53,7 @@ public class Map {
         /* fourth quadrant */
         for (int i = (x / 2); i < x; i++) {
             for (int j = (x / 2); j < x; j++) {
-                map[j][i] = new Terrain(j+(map.length * i),(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
+                map[i][j] = new Terrain(j+(map.length * i),(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
                 //      System.out.println("4");
             }
         }
@@ -127,13 +127,26 @@ public class Map {
     }
     public void printMapTime(){
         for(int i=0; i<map.length; i++){
-            System.out.println();
             for (int j=0; j<map.length; j++){
-                System.out.print(map[i][j].time + " ");
+                System.out.print((int)map[i][j].time + " ");
             }
+            System.out.println();
+        }
+    }
+    public void printMapEnergy(){
+        for(int i=0; i<map.length; i++){
+            for (int j=0; j<map.length; j++){
+                System.out.print((int)map[i][j].time + " ");
+            }
+            System.out.println();
         }
     }
     public Terrain TheCell(int i, int j){
+        return map[i][j];
+    }
+    public Terrain TheCell(int id){
+        int i = id/map.length;
+        int j = id%map.length;
         return map[i][j];
     }
     public Terrain GetTheqQuadrantInfo(int the_unit){
@@ -152,7 +165,7 @@ public class Map {
                 sum_energy_cost = sum_energy_cost + map[i][j].energy;
             }
         }
-        return new Terrain((int) Math.random(), sum_time_cost/(unit_length*unit_length), sum_energy_cost/(unit_length*unit_length));
+        return new Terrain((int) Math.random(), (int)(sum_time_cost/(unit_length*unit_length)), (int)(sum_energy_cost/(unit_length*unit_length)));
     }
 
     public int Length(){

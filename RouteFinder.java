@@ -38,44 +38,85 @@ public class RouteFinder {
 
         }
     }
-    public float explore(int src, int dest, int energy_capacity, int time_rest){
+    public int explore(int src, int dest, int energy_capacity, int time_rest){
         Set<Integer> settled = new HashSet<Integer>();
+        int route[] = new int[this.length*this.length];
         PriorityQueue<Terrain> pq;
-        float costET[] = new float[this.length*this.length];
+        int costET[] = new int[this.length*this.length];
         for(int i = 0; i<this.length*this.length; i++){
             costET[i] = Integer.MAX_VALUE;
         }
         costET[src] = 0;
-
         pq = new PriorityQueue<Terrain>(this.length*this.length, new Terrain());
         pq.add(new Terrain(src, 0, 0));
+        route[src] = src;
+        
         while(settled.size() != this.length*this.length){
-            int u = pq.remove().id;
-            settled.add(u);
-            neighbors(u, settled, energy_capacity, time_rest, costET, pq);
+            Terrain u = pq.remove();
+            int u_id = u.id;
+            settled.add(u_id);
+            if(u_id == dest){
+                break;
+            }
+            neighbors(u_id, settled, energy_capacity, time_rest, costET, pq, route);
         }
         System.out.println("The shortest expected time cost from source to dest is:" + costET[dest]);
-        return costET[dest];
+        int actual_time_cost = theActualTime(route, src, dest, energy_capacity, time_rest);
+        System.out.println("The actual time cost from source to dest is:" + actual_time_cost);
+        return actual_time_cost;
     }
-
-    private void neighbors(int u, Set<Integer> settled, int energy_capacity, int time_rest, float[] costET, PriorityQueue<Terrain> pq){
-        float edgeET = -1;
-        float newET = -1;
+    public int theActualTime(int[] route, int src, int dest, int energy_capacity, int time_rest){ 
+        int energy = energy_capacity;
+        int time = 0;
+        Terrain current_node = map.TheCell(dest);
+        while(true){
+            if(current_node.id!=src){ 
+                if(energy>=current_node.energy){
+                    energy = (int)(energy-current_node.energy);
+                    time = (int)(time+current_node.time);
+                }
+                else{
+                    energy = (int)(energy_capacity-current_node.energy);
+                    time = (int)(time+current_node.time+ time_rest);
+                } 
+                current_node = map.TheCell(route[current_node.id]);
+            }
+            else{
+                break;
+            }
+        }
+        return time;
+    }
+    private void neighbors(int u, Set<Integer> settled, int energy_capacity, int time_rest, int[] costET, PriorityQueue<Terrain> pq, int[] route){
+        int edgeET = -1;
+        int newET = -1;
 
         for(int i =0; i< adj.get(u).size(); i++){
             Terrain v = adj.get(u).get(i);
 
             if(!settled.contains(v.id)){
-                edgeET = v.time + (float)v.energy*time_rest/energy_capacity;
-                newET= costET[u] + edgeET;
+                edgeET = (int)(v.time + (int)(v.energy*time_rest/energy_capacity));
+                newET= (int)(costET[u] + edgeET);
 
                 if(newET < costET[v.id]){
                     costET[v.id] = newET;
                 }
+                route[v.id] = u;
+                pq.add(new Terrain(v.id, (int)costET[v.id], (int)costET[v.id]));
 
-                pq.add(new Terrain(v.id, costET[v.id], costET[v.id]));
             }
 
         }
     }
+    public int[][] explore(List<Integer> nodes, int energy_capacity, int time_rest){
+        int distance_matrix[][] = new int[nodes.size()][nodes.size()];
+        for(int i=0;i<nodes.size();i++){
+            for(int j=0;j<nodes.size();j++){
+                distance_matrix[i][j] = this.explore(nodes.get(i), nodes.get(j), energy_capacity, time_rest);
+            }
+        }
+        System.out.println(Arrays.deepToString(distance_matrix));
+        return null;
+    }
+
 }
