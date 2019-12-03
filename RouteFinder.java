@@ -115,8 +115,7 @@ public class RouteFinder {
                 distance_matrix[i][j] = this.explore(nodes.get(i), nodes.get(j), energy_capacity, time_rest);
             }
         }
-        System.out.println(Arrays.deepToString(distance_matrix));
-        return null;
+        return distance_matrix;
     }
 
 }

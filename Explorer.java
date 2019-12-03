@@ -13,16 +13,19 @@ public class Explorer {
         }
         int minE = 5;
         int maxE = 10;
-        int minT = 7;
+        int minT = 3;
         int maxT = 7;
         int energy_capacity = 100;
         int time_rest = 0;
         for(int i=0; i<sum_times;i++){
             Map map = new Map(length, minE, maxE , minT, maxT);
             RouteFinder dijkstra = new RouteFinder(map);
-            dijkstra.explore(visited_points, energy_capacity, time_rest);    
+            int distance_matrix[][] = dijkstra.explore(visited_points, energy_capacity, time_rest);    
+            System.out.println(Arrays.deepToString(distance_matrix));
+            TourFinder held_karp = new TourFinder(distance_matrix);
+            held_karp.travel();
         }
-        System.out.println(time/sum_times);
+        // System.out.println(time/sum_times);
     }
 
 }
