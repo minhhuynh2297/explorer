@@ -14,7 +14,12 @@ public class Terrain implements Comparator<Terrain> {
         this.time = time;
         this.energy = energy;
     }
-
+    public int time(int preid){
+        return this.time; 
+    }
+    public int energy(int preid){
+        return this.energy;
+    }
     @Override
     public int compare(Terrain o1, Terrain o2) {
         if(o1.time < o2.time){

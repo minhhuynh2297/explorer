@@ -72,12 +72,12 @@ public class RouteFinder {
         while(true){
             if(current_node.id!=src){ 
                 if(energy>=current_node.energy){
-                    energy = (int)(energy-current_node.energy);
-                    time = (int)(time+current_node.time);
+                    energy = (int)(energy-current_node.energy(route[current_node.id]));
+                    time = (int)(time+current_node.time(route[current_node.id]));
                 }
                 else{
-                    energy = (int)(energy_capacity-current_node.energy);
-                    time = (int)(time+current_node.time+ time_rest);
+                    energy = (int)(energy_capacity-current_node.energy(route[current_node.id]));
+                    time = (int)(time+current_node.time(route[current_node.id])+ time_rest);
                 } 
                 current_node = map.TheCell(route[current_node.id]);
             }
@@ -95,7 +95,7 @@ public class RouteFinder {
             Terrain v = adj.get(u).get(i);
 
             if(!settled.contains(v.id)){
-                edgeET = (int)(v.time + (int)(v.energy*time_rest/energy_capacity));
+                edgeET = (int)(v.time(u) + (int)(v.energy(u)*time_rest/energy_capacity));
                 newET= (int)(costET[u] + edgeET);
 
                 if(newET < costET[v.id]){
