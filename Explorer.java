@@ -10,10 +10,12 @@ public class Explorer {
         List<Integer> visited_points= new ArrayList<Integer>();
         for(int i=0; i<4; i++){
             visited_points.add(random.nextInt(length*length-1));
+            System.out.println(visited_points.get(i));
         }
+        System.out.println("*******");
         int minE = 5;
-        int maxE = 10;
-        int minT = 3;
+        int maxE = 5;
+        int minT = 6;
         int maxT = 7;
         int energy_capacity = 100;
         int time_rest = 0;

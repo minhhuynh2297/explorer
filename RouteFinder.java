@@ -70,16 +70,16 @@ public class RouteFinder {
     public int theActualTime(int[] route, int src, int dest, int energy_capacity, int time_rest){ 
         int energy = energy_capacity;
         int time = 0;
-        Terrain current_node = map.TheCell(dest);
+        Terrain current_node = map.TheCell(route[dest]);
         while(true){
             if(current_node.id!=src){ 
                 if(energy>=current_node.energy){
-                    energy = (int)(energy-current_node.energy(route[current_node.id]));
-                    time = (int)(time+current_node.time(route[current_node.id]));
+                    energy = (int)(energy - current_node.energy(route[current_node.id]));
+                    time = (int)(time + current_node.time(route[current_node.id]));
                 }
                 else{
-                    energy = (int)(energy_capacity-current_node.energy(route[current_node.id]));
-                    time = (int)(time+current_node.time(route[current_node.id])+ time_rest);
+                    energy = (int)(energy_capacity - current_node.energy(route[current_node.id]));
+                    time = (int)(time + current_node.time(route[current_node.id]) + time_rest);
                 } 
                 current_node = map.TheCell(route[current_node.id]);
             }
