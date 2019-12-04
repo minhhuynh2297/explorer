@@ -15,7 +15,7 @@ public class Explorer {
         System.out.println("*******");
         int minE = 5;
         int maxE = 5;
-        int minT = 6;
+        int minT = 1;
         int maxT = 7;
         int energy_capacity = 100;
         int time_rest = 0;

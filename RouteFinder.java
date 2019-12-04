@@ -71,9 +71,12 @@ public class RouteFinder {
         int energy = energy_capacity;
         int time = 0;
         Terrain current_node = map.TheCell(route[dest]);
+        // System.out.print("Route: " );
+        // System.out.print(dest +" " );
         while(true){
             if(current_node.id!=src){ 
                 if(energy>=current_node.energy){
+                    // System.out.print(current_node.id +" " );
                     energy = (int)(energy - current_node.energy(route[current_node.id]));
                     time = (int)(time + current_node.time(route[current_node.id]));
                 }
@@ -87,6 +90,8 @@ public class RouteFinder {
                 break;
             }
         }
+        // System.out.print(src +" " );
+        // System.out.println("");
         return time;
     }
     private void neighbors(int u, Set<Integer> settled, int energy_capacity, int time_rest, int[] costET, PriorityQueue<Terrain> pq, int[] route){
