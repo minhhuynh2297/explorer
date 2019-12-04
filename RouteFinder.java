@@ -38,6 +38,7 @@ public class RouteFinder {
 
         }
     }
+    // This method extracts the time cost of the best route from src to dest for the user by using dijkstra 
     public int explore(int src, int dest, int energy_capacity, int time_rest){
         Set<Integer> settled = new HashSet<Integer>();
         int route[] = new int[this.length*this.length];
@@ -65,6 +66,7 @@ public class RouteFinder {
         System.out.println("The actual time cost from source to dest is:" + actual_time_cost);
         return actual_time_cost;
     }
+    // This method extracts the time cost of the route for the user with energy_capacity and time_rest
     public int theActualTime(int[] route, int src, int dest, int energy_capacity, int time_rest){ 
         int energy = energy_capacity;
         int time = 0;
@@ -108,6 +110,8 @@ public class RouteFinder {
 
         }
     }
+    // This method extracts the distance matrix, 
+    // which contains the "best route" between all nodes(planned visited points) for the user with energy_capacity and time_rest
     public int[][] explore(List<Integer> nodes, int energy_capacity, int time_rest){
         int distance_matrix[][] = new int[nodes.size()][nodes.size()];
         for(int i=0;i<nodes.size();i++){
