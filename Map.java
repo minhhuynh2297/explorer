@@ -149,25 +149,50 @@ public class Map {
         int j = id%map.length;
         return map[i][j];
     }
-    public Terrain GetTheqQuadrantInfo(int the_unit){
+    // public Terrain GetTheqQuadrantInfo(int the_unit){
+    //     int unit_length = map.length/2;
+    //     int id_x = the_unit/2;
+    //     int id_y= the_unit%2;
+    //     int i_start = id_x*unit_length;
+    //     int i_end = i_start+unit_length;
+    //     int j_start = id_y*unit_length;
+    //     int j_end = j_start+unit_length;
+    //     float sum_time_cost = 0;
+    //     float sum_energy_cost = 0;
+    //     for (int i = i_start; i < i_end; i++) {
+    //         for (int j = j_start; j < j_end; j++) {
+    //             sum_time_cost = sum_time_cost + map[i][j].time;
+    //             sum_energy_cost = sum_energy_cost + map[i][j].energy;
+    //         }
+    //     }
+    //     return new Terrain((int) Math.random(), (int)(sum_time_cost/(unit_length*unit_length)), (int)(sum_energy_cost/(unit_length*unit_length)));
+    // }
+    public Terrain GetTheqQuadrantInfo(int pre_unit , int current_unit){
         int unit_length = map.length/2;
-        int id_x = the_unit/2;
-        int id_y= the_unit%2;
+        int id_x = current_unit/2;
+        int id_y= current_unit%2;
         int i_start = id_x*unit_length;
         int i_end = i_start+unit_length;
         int j_start = id_y*unit_length;
         int j_end = j_start+unit_length;
         float sum_time_cost = 0;
         float sum_energy_cost = 0;
+        int order = 0;
+        if(pre_unit>current_unit){
+            order = 1;
+        }
+        else if(pre_unit<=current_unit){
+            order = -1;
+        }
+
         for (int i = i_start; i < i_end; i++) {
             for (int j = j_start; j < j_end; j++) {
-                sum_time_cost = sum_time_cost + map[i][j].time;
-                sum_energy_cost = sum_energy_cost + map[i][j].energy;
+                sum_time_cost = sum_time_cost + map[i][j].time(map[i][j].id+order);
+                sum_energy_cost = sum_energy_cost + map[i][j].energy(map[i][j].id+order);
             }
         }
         return new Terrain((int) Math.random(), (int)(sum_time_cost/(unit_length*unit_length)), (int)(sum_energy_cost/(unit_length*unit_length)));
     }
-
     public int Length(){
         return map.length;
     }

@@ -4,6 +4,7 @@ public class Terrain implements Comparator<Terrain> {
 
     public int id;
     public int time, energy;
+    private int cost_feature = 10;
 
     public Terrain(){
 
@@ -15,10 +16,26 @@ public class Terrain implements Comparator<Terrain> {
         this.energy = energy;
     }
     public int time(int preid){
-        return this.time; 
+        if(this.id>preid){
+            return this.time+cost_feature;
+        }
+        else if(this.id<preid){
+            return this.time;
+        }
+        else{
+            return 0;
+        }
     }
     public int energy(int preid){
-        return this.energy;
+        if(this.id>preid){
+            return this.energy+cost_feature;
+        }
+        else if(this.id<preid){
+            return this.energy;
+        }
+        else{
+            return 0;
+        }
     }
     @Override
     public int compare(Terrain o1, Terrain o2) {
