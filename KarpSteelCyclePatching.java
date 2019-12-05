@@ -78,13 +78,7 @@ public class KarpSteelCyclePatching{
     		}    		
     		List<Integer> big_sum = new ArrayList<Integer>(big_a);
     		cycle_list.add(0, big_sum);
-    	}
-  //       StringBuilder sb = new StringBuilder();
-  //       for(int i=0; i<cycle_list.get(0).size(); i++){
-		// 	int num = cycle_list.get(0).get(i);
-		// 	sb.append(num);            	
-  //       }
-		// System.out.println(sb.toString());                       
+    	}                   
         return this.cyclePresentation(cycle_list.get(0));	
     }
     private List<Integer> cyclePresentation(List<Integer> cycle){

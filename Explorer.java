@@ -8,7 +8,8 @@ public class Explorer {
         int sum_times = 1;
         Random random = new Random();
         List<Integer> visited_points= new ArrayList<Integer>();
-        for(int i=0; i<4; i++){
+        int num_planned_points = 10;
+        for(int i=0; i<num_planned_points; i++){
             visited_points.add(random.nextInt(length*length-1));
             System.out.println(visited_points.get(i));
         }
@@ -24,11 +25,12 @@ public class Explorer {
             RouteFinder dijkstra = new RouteFinder(map);
             int distance_matrix[][] = dijkstra.explore(visited_points, energy_capacity, time_rest);    
             // int distance_matrix[][] = { { 0, 2, 9, 10 }, { 1, 0, 6, 4 }, { 15, 7, 0, 8 }, { 6, 3, 12, 0 } };
+            TourQuality tour_q = new TourQuality(distance_matrix);
             System.out.println(Arrays.deepToString(distance_matrix));
             KarpSteelCyclePatching ks_cycle_patching = new KarpSteelCyclePatching(distance_matrix);
-            ks_cycle_patching.travel();
+            System.out.println(tour_q.distanceOf(ks_cycle_patching.travel()));
             HeldKarp held_karp = new HeldKarp(distance_matrix);
-            held_karp.travel();
+            System.out.println(tour_q.distanceOf(held_karp.travel()));
         }
       // the problem is written in the form of a matrix
         // int[][] dataMatrix = {
