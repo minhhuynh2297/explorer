@@ -132,14 +132,16 @@ public class Map {
             }
             System.out.println();
         }
+        System.out.println();
     }
     public void printMapEnergy(){
         for(int i=0; i<map.length; i++){
             for (int j=0; j<map.length; j++){
-                System.out.print((int)map[i][j].time + " ");
+                System.out.print((int)map[i][j].energy + " ");
             }
             System.out.println();
         }
+        System.out.println();
     }
     public Terrain TheCell(int i, int j){
         return map[i][j];

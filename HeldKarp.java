@@ -36,6 +36,7 @@ public class HeldKarp{
                             arr = this.removeTheElement(arr, id_in_set);
                             int front_term = distance_matrix[j][suc];
                             pair_str = Integer.toString(suc)+"-"+Arrays.toString(arr);
+                            // System.out.println("**"+pair_str);
                             int final_term = front_term+cost.get(pair_str);
                             if(min>final_term){
                                 min = final_term;
