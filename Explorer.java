@@ -5,17 +5,22 @@ public class Explorer {
 
     public static void main(String[] args){
         // Three inputs
-        int energy_capacity = 10;
-        int time_rest = 100;
-        int map_length = 10;
-        int num_planned_points=16;
+        // int map_length = 10;
+        // int num_planned_points=16;
+        // int time_rest = 100;
+        // int energy_capacity = 10;
+        int map_length = Integer.parseInt(args[0]);
+        int num_planned_points = Integer.parseInt(args[1]);
+        int time_rest = Integer.parseInt(args[2]);
+        int energy_capacity = Integer.parseInt(args[3]);
+        
 
         int time = 0;
         int sum_times = 1;
         int minE = 1;
-        int maxE = 10;
+        int maxE = 7;
         int minT = 1;
-        int maxT = 10;
+        int maxT = 8;
 
         List<Integer> visited_points= new ArrayList<Integer>();
         // Held_Karp got a limit: in my computer: 16 is the allowed biggest number
@@ -31,6 +36,10 @@ public class Explorer {
         long startTime = 0;
 
         Map map = new Map(map_length, minE, maxE , minT, maxT);
+        System.out.println("Time Info of Map");
+        map.printMapTime();
+        System.out.println("Energy Info of Map");
+        map.printMapEnergy();
         RouteFinder astar_time_with_rest = new RouteFinder(map);
 
         int[][] distance_matrix_approx = astar_time_with_rest.explore(visited_points, energy_capacity, time_rest, 3);
@@ -43,8 +52,11 @@ public class Explorer {
         // tq_approx.printSimpleTour(approx_tour);
         // tq_approx.printTour(approx_tour);
         List<Integer> approx_tour_routes = tq_approx.getTourRoutes(approx_tour);
+        System.out.println("");
         System.out.println("Approx tour: ");
         tq_approx.printRoutes(approx_tour_routes);
+        System.out.println("approx_tour_distance: "+ tour_distance_patch/sum_times);
+        System.out.println("");
 
         int[][] distance_matrix_optimal = astar_time_with_rest.explore(visited_points, energy_capacity, time_rest, 2);
         route_list = astar_time_with_rest.getRoutes();
@@ -58,10 +70,11 @@ public class Explorer {
         List<Integer> optimal_tour_routes = tq_optimal.getTourRoutes(optimal_tour);
         System.out.println("Optimal tour: ");
         tq_optimal.printRoutes(optimal_tour_routes);
+        System.out.println("optimal_tour_distance: "+ tour_distance_hk/sum_times);  
+        System.out.println("");
 
-        System.out.println("tour_distance_hk: "+ tour_distance_hk/sum_times);  
-        System.out.println("tour_distance_patch: "+ tour_distance_patch/sum_times);
-        System.out.println("patched tour quality: " +  (tour_distance_patch/tour_distance_hk-1.0));
+
+        System.out.println("approx tour quality: " +  (tour_distance_patch/tour_distance_hk-1.0));
         System.out.println("");
         System.out.println("");
 
