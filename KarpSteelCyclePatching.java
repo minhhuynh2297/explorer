@@ -35,8 +35,8 @@ public class KarpSteelCyclePatching{
     			}
     			int v_a = big_a.get(id_a);
     			int v_a_next = big_a.get(id_a_next);
-    			System.out.println(v_a+" "+v_a_next);
-    			System.out.println("---------------------------------------");
+    			// System.out.println(v_a+" "+v_a_next);
+    			// System.out.println("---------------------------------------");
     			for(int id_b=0; id_b<big_b.size(); id_b++){
     				int id_b_next;
 	    			if(id_b+1<big_b.size()){
@@ -48,7 +48,7 @@ public class KarpSteelCyclePatching{
 	    			int v_b = big_b.get(id_b);
 	    			int v_b_next = big_b.get(id_b_next);
 	    			int p_cost = this.permutationCost( v_a, v_a_next, v_b, v_b_next);
-	    			System.out.println(v_b+" "+v_b_next+" "+p_cost);
+	    			// System.out.println(v_b+" "+v_b_next+" "+p_cost);
 	    			if(min_permutation>p_cost){
 	    				min_permutation = p_cost;
 	    				min_id_a = id_a;
@@ -56,13 +56,13 @@ public class KarpSteelCyclePatching{
 	    				min_id_b = id_b;
 	    				min_id_b_next = id_b_next;
 	    			}
-	    			System.out.println("----------");
+	    			// System.out.println("----------");
 				}
-				System.out.println("---------------------------------------");
+				// System.out.println("---------------------------------------");
     		}
-    		System.out.println("------------MIN_Vs---------");
-    		System.out.println(min_id_a+" "+min_id_a_next);
-    		System.out.println(min_id_b+" "+min_id_b_next);
+    		// System.out.println("------------MIN_Vs---------");
+    		// System.out.println(min_id_a+" "+min_id_a_next);
+    		// System.out.println(min_id_b+" "+min_id_b_next);
     		int id_in_old_b = min_id_b_next;
     		int id_in_new_a = min_id_a_next;
     		while(true){
@@ -91,7 +91,7 @@ public class KarpSteelCyclePatching{
     		cycle_p.add(cycle.get(id));
     	}  
     	cycle_p.add(0);  	
-		System.out.println(cycle_p.toString());
+		// System.out.println(cycle_p.toString());
 		return cycle_p; 
     }
     private int permutationCost(int v_a, int v_a_next, int v_b, int v_b_next){
@@ -148,7 +148,7 @@ public class KarpSteelCyclePatching{
 
             // }
             String result = sb.toString();
-            System.out.println(result);            
+            // System.out.println(result);            
         }    
         return cycle_list;	
     }

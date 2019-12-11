@@ -106,7 +106,7 @@ public class HeldKarp{
                 visited_point = successor.get(pair_str);
                 tour.add(visited_point); 
             }
-            System.out.println(tour.toString());
+            // System.out.println(tour.toString());
         }
 
         return tour;

@@ -17,15 +17,15 @@ public class Map {
      */
     public Map(int x, int minE, int maxE, int minT, int maxT) {
         map = new Terrain[x][x];
-
+        Random generator = new Random(0);
         /* first quadrant */
         for (int i = 0; i < (x / 2); i++) {
             for (int j = 0; j < (x / 2); j++) {
                 if(i==0){
-                    map[i][j] = new Terrain(j,(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
+                    map[i][j] = new Terrain(j,(int) (generator.nextDouble() * ((maxE - minE) + 1)) + minE, (int) (generator.nextDouble() * ((maxT - minT) + 1)) + minT);
                 }
                 else{
-                    map[i][j] = new Terrain(j+(map.length * i),(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
+                    map[i][j] = new Terrain(j+(map.length * i),(int) (generator.nextDouble() * ((maxE - minE) + 1)) + minE, (int) (generator.nextDouble() * ((maxT - minT) + 1)) + minT);
                 }
             }
         }
@@ -34,10 +34,10 @@ public class Map {
         for (int i = 0; i < (x / 2); i++) {
             for (int j = (x / 2); j < x; j++) {
                 if(i==0){
-                    map[i][j] = new Terrain(j,(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
+                    map[i][j] = new Terrain(j,(int) (generator.nextDouble() * ((maxE - minE) + 1)) + minE, (int) (generator.nextDouble() * ((maxT - minT) + 1)) + minT);
                 }
                 else{
-                    map[i][j] = new Terrain(j+(map.length * i),(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
+                    map[i][j] = new Terrain(j+(map.length * i),(int) (generator.nextDouble() * ((maxE - minE) + 1)) + minE, (int) (generator.nextDouble() * ((maxT - minT) + 1)) + minT);
                 }
             }
         }
@@ -45,7 +45,7 @@ public class Map {
         /* third quadrant */
         for (int i = (x / 2); i < x; i++) {
             for (int j = 0; j < (x / 2); j++) {
-                map[i][j] = new Terrain(j+(map.length * i),(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
+                map[i][j] = new Terrain(j+(map.length * i),(int) (generator.nextDouble() * ((maxE - minE) + 1)) + minE, (int) (generator.nextDouble() * ((maxT - minT) + 1)) + minT);
                 //       System.out.println("2");
             }
         }
@@ -53,7 +53,7 @@ public class Map {
         /* fourth quadrant */
         for (int i = (x / 2); i < x; i++) {
             for (int j = (x / 2); j < x; j++) {
-                map[i][j] = new Terrain(j+(map.length * i),(int) (Math.random() * ((maxE - minE) + 1)) + minE, (int) (Math.random() * ((maxT - minT) + 1)) + minT);
+                map[i][j] = new Terrain(j+(map.length * i),(int) (generator.nextDouble() * ((maxE - minE) + 1)) + minE, (int) (generator.nextDouble() * ((maxT - minT) + 1)) + minT);
                 //      System.out.println("4");
             }
         }

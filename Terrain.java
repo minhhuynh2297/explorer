@@ -4,7 +4,7 @@ public class Terrain implements Comparator<Terrain> {
 
     public int id;
     public int time, energy;
-    private int cost_feature = 0;
+    private int cost_feature = 10;
 
     public Terrain(){
 

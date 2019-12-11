@@ -15,7 +15,7 @@ public class RouteFinder {
     private int length;
     public RouteFinder(Map mapp){
         map = mapp;
-        length = mapp.Length();
+        length = map.Length();
     }
     private int energy_capacity;
     private int source;
@@ -26,17 +26,16 @@ public class RouteFinder {
     private int[] timeTothisVertex=new int[length*length];
     private int[] heuristic=new int[length*length];
     private List<Integer> route = new ArrayList<>(); 
+    private List<List<Integer>> route_list = new ArrayList<List<Integer>>(); 
     private int cal_timeOfAEdge(Cell a, Cell b) {
         int time;
         int potential_time = map.TheCell(b.id).time(a.id);
         int potential_energy = map.TheCell(b.id).energy(a.id);
         if (potential_energy > a.energy) {
             int num_rest = (potential_energy-a.energy)/energy_capacity + 1;
-            //b.energy = energy_capacity+a.energy-potential_energy;
             time = time_rest * num_rest + potential_time;
         }
         else {
-            //b.energy =
             time = potential_time;
         }
         return time;
@@ -51,7 +50,23 @@ public class RouteFinder {
 
 
     }
-    private int cal_heuristic(Cell id) {
+    private int cal_time_heuristic(Cell id) {
+        int row = id.id/length;
+        int col = id.id%length;
+        int res = Integer.MAX_VALUE;
+        for (int[] dir: direction) {
+            int newr = row + dir[0];
+            int newc = col + dir[1];
+            int newid = newr*length+newc;
+            if (newc >= 0 &&newc < length && newr >=0 && newr < length) {
+                int potential_time = map.TheCell(newid).time(id.id);
+                int potential_energy = map.TheCell(newid).energy(id.id);
+                res=Math.min(res, potential_time);
+            }
+        }
+        return res;
+    }
+    private int cal_time_rest_heuristic(Cell id) {
         int row = id.id/length;
         int col = id.id%length;
         int res = Integer.MAX_VALUE;
@@ -64,14 +79,31 @@ public class RouteFinder {
                 int potential_energy = map.TheCell(newid).energy(id.id);
                 if (potential_energy > id.energy) {
                     res=Math.min(res, time_rest+ potential_time);
-
+                }
+                else{
+                    res=Math.min(res, potential_time);   
                 }
             }
         }
         return res;
     }
-
-    public int explore(int src, int dest, int energy_capacity, int time_rest, boolean whether_a_star, boolean whether_lowest) {
+    private int cal_expected_time_heuristic(Cell id) {
+        int row = id.id/length;
+        int col = id.id%length;
+        int res = Integer.MAX_VALUE;
+        for (int[] dir: direction) {
+            int newr = row + dir[0];
+            int newc = col + dir[1];
+            int newid = newr*length+newc;
+            if (newc >= 0 &&newc < length && newr >=0 && newr < length) {
+                int potential_time = map.TheCell(newid).time(id.id);
+                int potential_energy = map.TheCell(newid).energy(id.id);
+                res=Math.min(res, potential_time+potential_energy*time_rest/energy_capacity);
+            }
+        }
+        return res;
+    }
+    public int explore(int src, int dest, int energy_capacity, int time_rest, int heuristic_type) {
         int res = Integer.MAX_VALUE-1000;
         this.source = src;
         this.destination = dest;
@@ -82,28 +114,26 @@ public class RouteFinder {
         for (int i = 0; i < length*length;i++) {
             cell[i] = new Cell(i);
             cell[i].timeToThisVertex = Integer.MAX_VALUE-1000;
-            cell[i].heuristic=cal_heuristic(cell[i]);
+            if(heuristic_type == 1){
+                cell[i].heuristic=cal_time_heuristic(cell[i]);
+            }
+            else if(heuristic_type == 2){
+                cell[i].heuristic=cal_expected_time_heuristic(cell[i]);
+            }
+            else if(heuristic_type == 3){
+                cell[i].heuristic=cal_time_rest_heuristic(cell[i]);
+            }
+            else{
+                cell[i].heuristic=0;
+            }
             cell[i].energy=0;
         }
-        // cell[src].time_cost=0;
-        // cell[src].energy_cost=0;
         cell[src].timeToThisVertex=0;
         cell[src].energy=energy_capacity;
         cell[src].prev = null;
         cell[dest].heuristic=0;
-        PriorityQueue<Cell> priorityQueue;
-        if(whether_a_star && whether_lowest){
-            priorityQueue = new PriorityQueue<>(timeComparator1);
-        }
-        else if(!(whether_a_star) && whether_lowest){
-            priorityQueue = new PriorityQueue<>(timeComparator2);
-        }
-        else if(whether_a_star && !(whether_lowest)){
-            priorityQueue = new PriorityQueue<>(timeComparator3);
-        }
-        else{
-            priorityQueue = new PriorityQueue<>(timeComparator4);   
-        }
+        PriorityQueue<Cell> priorityQueue = new PriorityQueue<>(timeComparator1);
+        
         for (Cell i : cell) {
             priorityQueue.add(i);
         }
@@ -114,13 +144,14 @@ public class RouteFinder {
             if (temp.id == dest) {
                 res = temp.timeToThisVertex;
                 Cell j = temp;
+                route = new ArrayList<>(); 
                 route.add(0,j.id);
                 while (j.prev!=null) {
                     j=j.prev;
                     route.add(0,j.id);
                 }
-                //  System.out.println(this.theActualTime(this.theRoute(cell), src, dest, energy_capacity, time_rest));
                 return res;
+                // return closeSet.size();
             }
             closeSet.add(temp);
             for (int[] dir: direction) {
@@ -150,6 +181,7 @@ public class RouteFinder {
         }
         // System.out.println(this.theActualTime(this.theRoute(cell), src, dest, energy_capacity, time_rest));
         return res;
+        // return closeSet.size();
 
     }
     public int [] theRoute(Cell[] cell) {
@@ -164,43 +196,20 @@ public class RouteFinder {
         }
         return route_info;
     }
-    public int theActualTime(int[] route_info, int src, int dest, int energy_capacity, int time_rest){ 
-        int energy = energy_capacity;
-        int time = 0;
-        Terrain current_node = map.TheCell(dest);
-        // System.out.print("Route: " );
-        // System.out.print(dest +" " );
-        while(true){
-            if(current_node.id!=src){ 
-                if(energy>=current_node.energy){
-                    // System.out.print(current_node.id +" " );
-                    energy = (int)(energy - current_node.energy(route_info[current_node.id]));
-                    time = (int)(time + current_node.time(route_info[current_node.id]));
-                }
-                else{
-                    energy = (int)(energy_capacity - current_node.energy(route_info[current_node.id]));
-                    time = (int)(time + current_node.time(route_info[current_node.id]) + time_rest);
-                } 
-                current_node = map.TheCell(route_info[current_node.id]);
-            }
-            else{
-                break;
-            }
-        }
-        // System.out.print(src +" " );
-        // System.out.println("");
-        return time;
-    }
     // This method extracts the distance matrix, 
     // which contains the "best route" between all nodes(planned visited points) for the user with energy_capacity and time_rest
-    public int[][] explore(List<Integer> nodes, int energy_capacity, int time_rest, boolean whether_a_star, boolean whether_lowest){
+    public int[][] explore(List<Integer> nodes, int energy_capacity, int time_rest, int heuristic_type){
         int distance_matrix[][] = new int[nodes.size()][nodes.size()];
         for(int i=0;i<nodes.size();i++){
             for(int j=0;j<nodes.size();j++){
-                distance_matrix[i][j] = this.explore(nodes.get(i), nodes.get(j), energy_capacity, time_rest, whether_a_star, whether_lowest);
+                distance_matrix[i][j] = this.explore(nodes.get(i), nodes.get(j), energy_capacity, time_rest, heuristic_type);                    
+                route_list.add(route);
             }
-        }
+        }     
         return distance_matrix;
+    }
+    public List<List<Integer>> getRoutes(){
+        return route_list;
     }
 
     /**
@@ -215,75 +224,6 @@ public class RouteFinder {
             return distance1 < distance2? -1:1;
         }
     };
-    Comparator<Cell> timeComparator2 =  new Comparator<>() {
-        @Override
-        public int compare(Cell o1, Cell o2) {
-            int distance1=o1.timeToThisVertex;
-            int distance2=o2.timeToThisVertex;
-            return distance1 < distance2? -1:1;
-        }
-    };
-    Comparator<Cell> timeComparator3 =  new Comparator<>() {
-        @Override
-        public int compare(Cell o1, Cell o2) {
-            int o1_preid;
-            if(o1.prev==null){
-                o1_preid = o1.id;
-            }
-            else{
-                o1_preid = o1.prev.id;
-            }
-            int o1_time = map.TheCell(o1.id).time(o1_preid);
-            int o1_energy = map.TheCell(o1.id).energy(o1_preid);
-            int o2_preid;
-            if(o2.prev==null){
-                o2_preid = o2.id;
-            }
-            else{
-                o2_preid = o2.prev.id;
-            }
-            int o2_time = map.TheCell(o2.id).time(o2_preid);
-            int o2_energy = map.TheCell(o2.id).energy(o2_preid);
-            int distance1=o1_time+o1_energy*time_rest/energy_capacity+o1.heuristic;
-            int distance2=o2_time+o2_energy*time_rest/energy_capacity+o2.heuristic;
-            return distance1 < distance2? -1:1;
-        }
-    };
-    Comparator<Cell> timeComparator4 =  new Comparator<>() {
-        @Override
-        public int compare(Cell o1, Cell o2) {
-            int o1_preid;
-            if(o1.prev==null){
-                o1_preid = o1.id;
-            }
-            else{
-                o1_preid = o1.prev.id;
-            }
-            int o1_time = map.TheCell(o1.id).time(o1_preid);
-            int o1_energy = map.TheCell(o1.id).energy(o1_preid);
-            int o2_preid;
-            if(o2.prev==null){
-                o2_preid = o2.id;
-            }
-            else{
-                o2_preid = o2.prev.id;
-            }
-            int o2_time = map.TheCell(o2.id).time(o2_preid);
-            int o2_energy = map.TheCell(o2.id).energy(o2_preid);
-            // System.out.println(o2_preid);
-            int distance1=o1_time+o1_energy*time_rest/energy_capacity;
-            int distance2=o2_time+o2_energy*time_rest/energy_capacity;
-            return distance1 < distance2? -1:1;
-        }
-    };
-
-
-
-
-
-
-
-
 
 }
 
