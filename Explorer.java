@@ -29,7 +29,7 @@ public class Explorer {
             int time = 0;
             int sum_times = 1;
             int minE = 1;
-            int maxE = 7;
+            int maxE = 8;
             int minT = 1;
             int maxT = 8;
 
