@@ -17,6 +17,7 @@ public class Map {
      */
     public Map(int x, int minE, int maxE, int minT, int maxT) {
         map = new Terrain[x][x];
+        // Random generator = new Random(0);
         Random generator = new Random(0);
         /* first quadrant */
         for (int i = 0; i < (x / 2); i++) {

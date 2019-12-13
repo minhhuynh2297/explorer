@@ -202,15 +202,37 @@ public class RouteFinder {
         int distance_matrix[][] = new int[nodes.size()][nodes.size()];
         for(int i=0;i<nodes.size();i++){
             for(int j=0;j<nodes.size();j++){
-                distance_matrix[i][j] = this.explore(nodes.get(i), nodes.get(j), energy_capacity, time_rest, heuristic_type);                    
+                // distance_matrix[i][j] = this.explore(nodes.get(i), nodes.get(j), energy_capacity, time_rest, heuristic_type); 
+                this.explore(nodes.get(i), nodes.get(j), energy_capacity, time_rest, heuristic_type);
+                distance_matrix[i][j] = theActualTime(nodes.get(i), nodes.get(j), energy_capacity, time_rest);                   
                 route_list.add(route);
             }
         }     
         return distance_matrix;
     }
+
+    public int theActualTime(int src, int dest, int energy_capacity, int time_rest){ 
+        int energy = energy_capacity;
+        int time = 0;
+        for(int i=1; i<route.size();i++){
+             int t_cost = map.TheCell(route.get(i)).time(route.get(i-1));
+             int e_cost = map.TheCell(route.get(i)).time(route.get(i-1));
+             if(energy>e_cost){
+                energy -= e_cost;
+                time += t_cost;
+             }
+             else{
+                int num_rest = (e_cost-energy)/energy_capacity + 1;
+                energy = energy_capacity*num_rest+energy-t_cost;
+                time += time_rest * num_rest + t_cost;
+             }
+        }
+        return time;
+    }
     public List<List<Integer>> getRoutes(){
         return route_list;
     }
+
 
     /**
      * Define the compare rule for A star

@@ -57,36 +57,39 @@ public class Explorer {
             System.out.println("Wind Cost Feature: 10");
             RouteFinder astar_time_with_rest = new RouteFinder(map);
 
-            int[][] distance_matrix_approx = astar_time_with_rest.explore(visited_points, energy_capacity, time_rest, 3);
+            int[][] distance_matrix_approx = astar_time_with_rest.explore(visited_points, energy_capacity, time_rest, 0);
+            System.out.println(Arrays.deepToString(distance_matrix_approx));
             List<List<Integer>> route_list = astar_time_with_rest.getRoutes();
             TourQuality tq_approx  = new TourQuality(distance_matrix_approx, route_list, map_length);
             // tq_approx.printRoutes();
-            KarpSteelCyclePatching patch = new KarpSteelCyclePatching(distance_matrix_approx);
+            // KarpSteelCyclePatching patch = new KarpSteelCyclePatching(distance_matrix_approx);
+            HeldKarp patch = new HeldKarp(distance_matrix_approx);
             List<Integer> approx_tour = patch.travel();
             tour_distance_patch+=tq_approx.distanceOf(approx_tour);
-            // tq_approx.printSimpleTour(approx_tour);
+            tq_approx.printSimpleTour(approx_tour);
             // tq_approx.printTour(approx_tour);
             List<Integer> approx_tour_routes = tq_approx.getTourRoutes(approx_tour);
             System.out.println("");
             System.out.println("Approx tour: ");
             tq_approx.printRoutes(approx_tour_routes);
-            tq_approx.printTourMap(approx_tour_routes);
+            // tq_approx.printTourMap(approx_tour_routes);
             System.out.println("approx_tour_distance: "+ tour_distance_patch/sum_times);
             System.out.println("");
 
-            int[][] distance_matrix_optimal = astar_time_with_rest.explore(visited_points, energy_capacity, time_rest, 2);
+            int[][] distance_matrix_optimal = astar_time_with_rest.explore(visited_points, energy_capacity, time_rest, 1);
+            System.out.println(Arrays.deepToString(distance_matrix_optimal));
             route_list = astar_time_with_rest.getRoutes();
             TourQuality tq_optimal  = new TourQuality(distance_matrix_optimal, route_list, map_length);
             // tq_optimal.printRoutes();
             HeldKarp hk = new HeldKarp(distance_matrix_optimal);
             List<Integer> optimal_tour = hk.travel();
             tour_distance_hk+=tq_optimal.distanceOf(optimal_tour);
-            // tq_optimal.printSimpleTour(optimal_tour);
+            tq_optimal.printSimpleTour(optimal_tour);
             // tq_optimal.printTour(optimal_tour);
             List<Integer> optimal_tour_routes = tq_optimal.getTourRoutes(optimal_tour);
             System.out.println("Optimal tour: ");
             tq_optimal.printRoutes(optimal_tour_routes);
-            tq_optimal.printTourMap(optimal_tour_routes);
+            // tq_optimal.printTourMap(optimal_tour_routes);
             System.out.println("optimal_tour_distance: "+ tour_distance_hk/sum_times);  
             System.out.println("");
 
