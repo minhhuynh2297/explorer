@@ -28,7 +28,7 @@ public class Terrain implements Comparator<Terrain> {
     }
     public int energy(int preid){
         if(this.id>preid){
-            return this.energy+cost_feature;
+            return this.energy;
         }
         else if(this.id<preid){
             return this.energy;

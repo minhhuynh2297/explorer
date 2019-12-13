@@ -29,17 +29,20 @@ public class Explorer {
             int time = 0;
             int sum_times = 1;
             int minE = 1;
-            int maxE = 8;
+            int maxE = 9;
             int minT = 1;
-            int maxT = 8;
+            int maxT = 9;
 
             List<Integer> visited_points= new ArrayList<Integer>();
             // Held_Karp got a limit: in my computer: 16 is the allowed biggest number
+            System.out.print("visited points: ");
             Random random = new Random(0);
             for(int i=0; i<num_planned_points; i++){
                 int visited_point = random.nextInt(map_length*map_length-1);
                 visited_points.add(visited_point);
+                System.out.print(visited_point+" ");
             }
+            System.out.println(" ");
             System.out.println("*******");
 
             float tour_distance_patch = 0; 
@@ -56,7 +59,7 @@ public class Explorer {
 
             int[][] distance_matrix_approx = astar_time_with_rest.explore(visited_points, energy_capacity, time_rest, 3);
             List<List<Integer>> route_list = astar_time_with_rest.getRoutes();
-            TourQuality tq_approx  = new TourQuality(distance_matrix_approx, route_list);
+            TourQuality tq_approx  = new TourQuality(distance_matrix_approx, route_list, map_length);
             // tq_approx.printRoutes();
             KarpSteelCyclePatching patch = new KarpSteelCyclePatching(distance_matrix_approx);
             List<Integer> approx_tour = patch.travel();
@@ -67,12 +70,13 @@ public class Explorer {
             System.out.println("");
             System.out.println("Approx tour: ");
             tq_approx.printRoutes(approx_tour_routes);
+            tq_approx.printTourMap(approx_tour_routes);
             System.out.println("approx_tour_distance: "+ tour_distance_patch/sum_times);
             System.out.println("");
 
             int[][] distance_matrix_optimal = astar_time_with_rest.explore(visited_points, energy_capacity, time_rest, 2);
             route_list = astar_time_with_rest.getRoutes();
-            TourQuality tq_optimal  = new TourQuality(distance_matrix_optimal, route_list);
+            TourQuality tq_optimal  = new TourQuality(distance_matrix_optimal, route_list, map_length);
             // tq_optimal.printRoutes();
             HeldKarp hk = new HeldKarp(distance_matrix_optimal);
             List<Integer> optimal_tour = hk.travel();
@@ -82,6 +86,7 @@ public class Explorer {
             List<Integer> optimal_tour_routes = tq_optimal.getTourRoutes(optimal_tour);
             System.out.println("Optimal tour: ");
             tq_optimal.printRoutes(optimal_tour_routes);
+            tq_optimal.printTourMap(optimal_tour_routes);
             System.out.println("optimal_tour_distance: "+ tour_distance_hk/sum_times);  
             System.out.println("");
 
